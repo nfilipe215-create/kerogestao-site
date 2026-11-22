@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KeroGestão · Sistema para revenda de gás e água</title>
+<meta name="description" content="Sistema completo para revenda de gás e água: bina que identifica quem liga, pedido rápido, app do entregador, caixa, vasilhames, comodato, estoque e financeiro num painel só.">
+<meta name="theme-color" content="#0B1014">
+<meta property="og:title" content="KeroGestão · Sistema para revenda de gás e água">
+<meta property="og:description" content="Do toque do telefone à entrega: bina, pedidos, entregadores, caixa e financeiro num painel só.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2300638E'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,300;125,700;125,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B1014; --bg2:#0E151A; --card:#19222A; --raised:#202B34; --line:#2F3C47; --soft:#222D36;
+    --text:#F2F6F8; --dim:#A9BDC9; --faint:#8296A5;
+    --cyan:#36A4DE; --cyan-h:#4DB3E8; --cyan-dim:#1D3443; --deep:#00638E; --ice:#A9D8F0;
+    --green:#3ecf8e; --wa:#25D366; --orange:#ff6b35;
+    --r:14px; --max:1180px;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:84px}
+  body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 Inter,system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  img{max-width:100%;height:auto;display:block}
+  a{color:inherit}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 20px}
+  .disp{font-family:'Archivo',Inter,sans-serif;font-stretch:125%;font-variation-settings:'wdth' 125;text-transform:uppercase;letter-spacing:.01em}
+  svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none}
+  :focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:6px}
+
+  /* botões */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;height:50px;padding:0 22px;border-radius:12px;font:600 15.5px Inter;text-decoration:none;cursor:pointer;border:1px solid transparent;white-space:nowrap;transition:background .15s,border-color .15s,transform .15s}
+  .btn:hover{transform:translateY(-1px)}
+  .btn-wa{background:var(--wa);color:#05210f}
+  .btn-wa:hover{background:#2fe072}
+  .btn-ghost{border-color:var(--line);color:var(--text);background:rgba(255,255,255,.02)}
+  .btn-ghost:hover{border-color:rgba(54,164,222,.6)}
+  .btn svg{width:20px;height:20px}
+
+  /* topo */
+  header.nav{position:sticky;top:0;z-index:50;background:rgba(11,16,20,.82);backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid rgba(47,60,71,.6)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;gap:16px;height:68px}
+  .brand{display:flex;align-items:center;gap:11px;text-decoration:none}
+  .mark{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,var(--bg),#004A6B,var(--deep),var(--ice));display:grid;place-items:center;box-shadow:0 0 0 1px rgba(0,99,142,.3),0 4px 14px rgba(0,99,142,.25);flex:none}
+  .mark svg{height:22px;width:auto}
+  .word{font-family:'Archivo',Inter,sans-serif;font-stretch:125%;font-variation-settings:'wdth' 125;font-size:17px;line-height:1;text-transform:uppercase;letter-spacing:.02em}
+  .word b{font-weight:800}.word span{font-weight:300;color:#DCE6EC;margin-left:.12em}
+  .links{display:flex;gap:26px;font-size:14.5px;color:var(--dim)}
+  .links a{text-decoration:none}.links a:hover{color:var(--text)}
+  .nav .btn{height:42px;padding:0 16px;font-size:14.5px}
+  @media(max-width:900px){.links{display:none}}
+  @media(max-width:480px){.nav .btn span{display:none}.nav .btn{width:42px;padding:0}}
+
+  /* hero */
+  .hero{position:relative;padding:72px 0 40px;overflow:hidden}
+  .hero:before{content:"";position:absolute;inset:-20% -10% auto;height:720px;background:radial-gradient(60% 55% at 50% 0%,rgba(0,99,142,.35),transparent 70%);pointer-events:none}
+  .kick{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ice);background:rgba(0,99,142,.18);border:1px solid rgba(54,164,222,.3);padding:6px 12px;border-radius:999px}
+  .kick i{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(62,207,142,.18)}
+  .hero h1{font-size:clamp(30px,5.2vw,58px);line-height:1.04;margin:20px 0 18px;max-width:900px;font-weight:800}
+  .hero h1 em{font-style:normal;color:var(--cyan)}
+  .hero p.lead{font-size:clamp(16px,1.6vw,19px);color:var(--dim);max-width:640px;margin:0 0 28px}
+  .ctas{display:flex;gap:12px;flex-wrap:wrap}
+  .proof{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:26px;color:var(--faint);font-size:14px}
+  .proof span{display:inline-flex;align-items:center;gap:7px}
+  .proof svg{width:17px;height:17px;color:var(--green)}
+  .stage{position:relative;margin-top:54px}
+  .browser{border-radius:14px;border:1px solid var(--line);background:#0d1318;box-shadow:0 40px 90px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.02);overflow:hidden}
+  .browser .bar{height:34px;display:flex;align-items:center;gap:7px;padding:0 14px;border-bottom:1px solid var(--soft);background:#111a20}
+  .browser .bar i{width:10px;height:10px;border-radius:50%;background:#2a3640}
+  .browser .bar span{margin-left:14px;font-size:12px;color:var(--faint);background:rgba(0,0,0,.25);border:1px solid var(--soft);border-radius:6px;padding:2px 12px}
+  .phone{width:250px;border-radius:34px;padding:9px;background:#1b1f24;box-shadow:0 30px 70px rgba(0,0,0,.6),0 0 0 1px #2c3238}
+  .phone img{border-radius:26px}
+  .stage .phone{position:absolute;right:-6px;bottom:-40px;width:clamp(150px,20vw,240px)}
+  @media(max-width:700px){.stage .phone{right:-10px;bottom:-30px}}
+
+  /* seções */
+  section{padding:96px 0}
+  .sec-h{max-width:760px;margin:0 0 44px}
+  .eyebrow{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:12px}
+  h2{font-size:clamp(25px,3.4vw,38px);line-height:1.12;margin:0 0 14px;font-weight:800}
+  .sec-h p{color:var(--dim);font-size:17px;margin:0}
+
+  /* dores */
+  .pains{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .pain{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px}
+  .pain .ic{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;background:rgba(255,107,53,.12);color:var(--orange);margin-bottom:14px}
+  .pain h3{font-size:16.5px;margin:0 0 6px;line-height:1.3}
+  .pain p{margin:0;color:var(--dim);font-size:14.5px}
+  .pain .fix{margin-top:14px;padding-top:12px;border-top:1px solid var(--soft);font-size:14px;color:var(--green);display:flex;gap:8px}
+  .pain .fix svg{width:17px;height:17px;margin-top:3px}
+  @media(max-width:1000px){.pains{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.pains{grid-template-columns:1fr}}
+
+  /* recursos alternados */
+  .feat{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.25fr);gap:56px;align-items:center;padding:44px 0}
+  .feat.rev{grid-template-columns:minmax(0,1.25fr) minmax(0,.9fr)}
+  .feat.rev .ft{order:2}
+  .wrap.feat{padding-left:20px;padding-right:20px}
+  .ft .tag{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--cyan);margin-bottom:12px}
+  .ft .tag svg{width:18px;height:18px}
+  .ft h3{font-size:clamp(22px,2.6vw,30px);line-height:1.18;margin:0 0 12px;font-weight:700}
+  .ft p{color:var(--dim);margin:0 0 16px}
+  .ft ul{list-style:none;padding:0;margin:0;display:grid;gap:9px}
+  .ft li{display:flex;gap:10px;font-size:15px;color:#DCE6EC}
+  .ft li svg{width:18px;height:18px;color:var(--green);margin-top:3px}
+  .shot{border-radius:12px;border:1px solid var(--line);overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.45)}
+  .phones{display:flex;gap:22px;justify-content:center}
+  .phones .phone:nth-child(2){margin-top:48px}
+  @media(max-width:900px){.feat,.feat.rev{grid-template-columns:1fr;gap:28px}.feat.rev .ft{order:0}}
+  @media(max-width:560px){.phones .phone{width:46%}}
+
+  /* grade de extras */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .cell{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px}
+  .cell .ic{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;background:rgba(54,164,222,.13);color:var(--cyan);margin-bottom:14px}
+  .cell h3{font-size:16.5px;margin:0 0 6px}
+  .cell p{margin:0;color:var(--dim);font-size:14.5px}
+  @media(max-width:900px){.grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.grid{grid-template-columns:1fr}}
+
+  /* implantação */
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;counter-reset:s}
+  .step{position:relative;background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:24px 22px}
+  .step b.n{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--cyan-dim);color:var(--cyan);font:700 15px Inter;margin-bottom:14px;border:1px solid rgba(54,164,222,.35)}
+  .step h3{font-size:16.5px;margin:0 0 6px}
+  .step p{margin:0;color:var(--dim);font-size:14.5px}
+  @media(max-width:1000px){.steps{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.steps{grid-template-columns:1fr}}
+
+  /* planos */
+  .plan{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0;border:1px solid rgba(54,164,222,.4);border-radius:18px;overflow:hidden;background:linear-gradient(135deg,rgba(0,99,142,.22),rgba(25,34,42,.9) 55%)}
+  .plan .l{padding:36px}
+  .plan .r{padding:36px;border-left:1px solid var(--line);background:rgba(11,16,20,.45)}
+  .plan h3{font-size:26px;margin:0 0 8px;font-weight:800}
+  .plan .l p{color:var(--dim);margin:0 0 22px}
+  .plan ul{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:10px 18px}
+  .plan li{display:flex;gap:9px;font-size:14.5px;color:#DCE6EC}
+  .plan li svg{width:17px;height:17px;color:var(--green);margin-top:3px}
+  .plan small{display:block;color:var(--faint);font-size:13px;margin-top:14px}
+  @media(max-width:900px){.plan{grid-template-columns:1fr}.plan .r{border-left:0;border-top:1px solid var(--line)}.plan ul{grid-template-columns:1fr}}
+
+  /* dúvidas */
+  .faq{max-width:860px}
+  details{border-bottom:1px solid var(--line)}
+  details summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 0;font-weight:600;font-size:16.5px}
+  details summary::-webkit-details-marker{display:none}
+  details summary:after{content:"+";font-size:24px;font-weight:300;color:var(--cyan);flex:none;transition:transform .2s}
+  details[open] summary:after{transform:rotate(45deg)}
+  details p{margin:-6px 0 20px;color:var(--dim);max-width:760px}
+
+  /* chamada final */
+  .final{text-align:center;padding:88px 20px;border-radius:22px;border:1px solid rgba(54,164,222,.35);background:radial-gradient(70% 90% at 50% 0%,rgba(0,99,142,.4),rgba(14,21,26,.95) 70%)}
+  .final h2{max-width:760px;margin:0 auto 14px}
+  .final p{color:var(--dim);max-width:560px;margin:0 auto 28px;font-size:17px}
+  .final .ctas{justify-content:center}
+
+  footer{border-top:1px solid var(--soft);padding:34px 0 40px;color:var(--faint);font-size:14px}
+  .foot{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}
+  .foot nav{display:flex;gap:20px;flex-wrap:wrap}
+  .foot a{text-decoration:none}.foot a:hover{color:var(--text)}
+
+
+  /* mapa ao vivo (destaque) */
+  .live{position:relative;background:radial-gradient(80% 60% at 50% 0%,rgba(0,99,142,.22),transparent 70%)}
+  .live-head{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:48px;align-items:end;margin-bottom:34px}
+  .live-head h2{font-size:clamp(26px,3.3vw,40px)}
+  .live-head p{color:var(--dim);font-size:17px;margin:0}
+  .badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .badge{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.02);color:#DCE6EC}
+  .badge i{width:7px;height:7px;border-radius:50%;background:var(--c,var(--green))}
+  .mapstage{position:relative;border-radius:18px;border:1px solid var(--line);overflow:hidden;box-shadow:0 40px 90px rgba(0,0,0,.5);background:#0e171d;aspect-ratio:16/8.4}
+  .mapstage svg.base{position:absolute;inset:0;width:100%;height:100%}
+  .mk{position:absolute;transform:translate(-50%,-50%);z-index:3}
+  .cour{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#0d1a1c;color:#fff;font:700 13px Inter;border:3px solid var(--rc);box-shadow:0 0 0 5px color-mix(in srgb,var(--rc) 22%,transparent),0 6px 16px rgba(0,0,0,.5)}
+  .cour.moving{animation:pulse 2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--rc) 45%,transparent),0 6px 16px rgba(0,0,0,.5)}100%{box-shadow:0 0 0 16px transparent,0 6px 16px rgba(0,0,0,.5)}}
+  .cname{position:absolute;left:50%;top:100%;transform:translate(-50%,6px);white-space:nowrap;font:600 11.5px Inter;background:rgba(11,16,20,.9);border:1px solid var(--line);padding:2px 8px;border-radius:6px;color:#DCE6EC}
+  .pin{transform:translate(-50%,-100%)}
+  .pin b{display:grid;place-items:center;width:30px;height:30px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--pc);box-shadow:0 6px 14px rgba(0,0,0,.45);border:2px solid #fff}
+  .pin b span{transform:rotate(45deg);font:700 13px Inter;color:#fff}
+  .depot{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(135deg,var(--bg),#004A6B,var(--deep),var(--ice));box-shadow:0 0 0 2px #fff,0 6px 16px rgba(0,0,0,.5)}
+  .depot svg{height:22px;width:auto}
+  .km{transform:translate(-50%,-50%);font:600 11px Inter;color:#ff9a6e;background:rgba(11,16,20,.85);border:1px solid rgba(255,107,53,.45);border-radius:999px;padding:1px 8px;white-space:nowrap}
+  .etab{transform:translate(-8%,-150%);background:#fff;color:#0B1014;border-radius:12px;padding:8px 12px;box-shadow:0 14px 30px rgba(0,0,0,.45);white-space:nowrap}
+  .etab small{display:block;font-size:11px;color:#51657A;font-weight:600}
+  .etab strong{font:800 20px Inter;letter-spacing:-.01em}
+  .etab strong em{font-style:normal;font-size:12.5px;font-weight:600;color:#51657A;margin-left:6px}
+  .float{position:absolute;z-index:4;border-radius:12px;overflow:hidden;border:1px solid var(--line);box-shadow:0 24px 50px rgba(0,0,0,.55)}
+  .float.list{left:18px;top:18px;width:min(30%,300px)}
+  .float.card{right:18px;bottom:18px;width:min(24%,250px)}
+  .legend{position:absolute;left:18px;bottom:16px;z-index:4;display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--dim);background:rgba(11,16,20,.82);border:1px solid var(--line);border-radius:10px;padding:7px 12px;max-width:60%}
+  .legend span{display:inline-flex;align-items:center;gap:6px}.legend i{width:8px;height:8px;border-radius:50%;background:var(--c)}
+  .livegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
+  .livegrid .cell .ic{background:rgba(255,107,53,.13);color:var(--orange)}
+  .mapnote{font-size:12.5px;color:var(--faint);margin-top:10px}
+  .mobshots{display:none}
+  @media(max-width:900px){.live-head{grid-template-columns:1fr;gap:16px}.livegrid{grid-template-columns:1fr 1fr}
+    .float,.legend{display:none}.mapstage{aspect-ratio:1/.82}.etab{transform:translate(calc(-100% - 22px),-118%);padding:5px 10px}.etab small{display:none}.etab strong{font-size:16px}.cname{font-size:10.5px}.cour{width:36px;height:36px;font-size:12px}.mobshots{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.mobshots img{border-radius:12px;border:1px solid var(--line)}}
+  @media(max-width:560px){.livegrid{grid-template-columns:1fr}.mobshots{grid-template-columns:1fr}}
+
+  /* WhatsApp flutuante */
+  .wa-float{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:60;width:58px;height:58px;border-radius:50%;background:var(--wa);display:grid;place-items:center;box-shadow:0 10px 26px rgba(37,211,102,.35),0 4px 10px rgba(0,0,0,.4);text-decoration:none}
+  .wa-float svg{width:30px;height:30px}
+
+  /* política de privacidade */
+  .priv{position:fixed;inset:0;z-index:80;background:rgba(5,8,10,.75);backdrop-filter:blur(3px);display:none;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto}
+  .priv:target{display:flex}
+  .priv .box{max-width:780px;width:100%;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:32px 30px;position:relative}
+  .priv h2{font-size:24px}
+  .priv h3{font-size:16px;margin:22px 0 6px}
+  .priv p,.priv li{color:var(--dim);font-size:14.5px}
+  .priv .x{position:absolute;top:14px;right:16px;width:38px;height:38px;border-radius:10px;display:grid;place-items:center;text-decoration:none;color:var(--faint);border:1px solid var(--line);font-size:20px}
+
+  /* revelar ao rolar */
+  .rv{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+  .rv.on{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}.btn:hover{transform:none}}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="#topo" aria-label="KeroGestão, início">
+      <span class="mark"><svg viewBox="0 0 231 325" aria-hidden="true"><path d="M79.4 315.8 C76.7 313.1 72.7 308.9 70.7 306.4 C65.8 300.6 62.9 296.7 60.0 291.6 C59.8 291.2 59.3 290.4 58.9 289.8 C58.2 288.6 56.1 284.2 55.4 282.8 C54.2 279.9 52.3 273.2 51.9 270.8 C51.8 270.1 51.6 269.3 51.5 268.9 C51.1 267.7 50.5 261.2 50.5 258.8 C50.5 256.3 51.1 249.9 51.5 248.5 C51.6 248.0 51.9 246.7 52.1 245.7 C52.6 243.3 53.2 241.1 53.6 240.0 C53.8 239.5 54.5 237.8 55.1 236.2 C58.0 228.8 63.2 220.8 69.7 213.8 C77.7 205.0 88.7 196.8 101.4 190.0 C102.5 189.4 104.1 188.5 105.0 188.0 C107.3 186.7 117.4 181.8 133.4 174.1 C134.6 173.5 137.8 172.0 140.5 170.7 C143.2 169.4 146.2 168.0 147.1 167.5 C149.9 166.3 161.9 160.2 165.4 158.2 C166.0 157.9 167.2 157.2 168.1 156.6 C169.1 156.1 170.1 155.5 170.5 155.2 C172.5 154.1 179.4 149.3 180.9 148.1 C186.1 143.8 188.9 141.3 190.8 139.1 C195.2 134.0 195.8 133.3 197.8 130.2 C200.8 125.8 202.0 123.7 203.6 119.8 C204.0 118.9 204.4 117.8 204.6 117.4 C205.0 116.5 205.8 114.0 206.4 112.0 C206.8 110.5 207.4 106.6 207.6 104.1 C207.9 100.9 208.3 100.7 209.5 103.1 C210.0 103.9 210.6 105.2 211.0 105.9 C211.4 106.6 212.5 108.6 213.4 110.5 C217.4 118.2 218.3 119.9 218.5 120.1 C218.8 120.5 221.0 125.6 221.0 125.8 C221.0 125.9 221.2 126.4 221.4 126.8 C222.5 129.3 225.1 137.8 225.8 141.4 C225.9 142.1 226.2 143.4 226.4 144.5 C227.0 147.4 227.3 153.5 227.1 157.6 C226.9 163.2 226.2 166.8 223.9 173.6 C222.1 179.1 220.7 182.0 216.8 187.8 C211.5 195.8 203.3 203.6 193.6 209.9 C189.2 212.7 184.0 215.6 178.4 218.3 C169.9 222.5 164.8 225.0 164.5 225.0 C164.4 225.0 163.6 225.3 162.8 225.7 C160.4 226.9 151.6 231.1 148.2 232.6 C147.4 233.0 146.1 233.5 145.3 233.9 C141.5 235.6 126.8 243.1 124.1 244.6 C121.4 246.2 117.3 248.7 114.6 250.5 C111.9 252.3 104.5 258.5 101.8 261.2 C94.2 268.9 88.8 277.2 86.2 285.2 C83.7 292.6 83.2 295.5 83.1 301.6 C82.9 306.6 83.5 312.1 84.5 316.8 C85.3 320.5 85.4 320.8 84.9 320.8 C84.6 320.8 82.2 318.5 79.4 315.8 Z M18.6 243.8 C18.3 243.3 18.0 242.8 18.0 242.7 C18.0 242.6 17.4 241.4 16.7 240.2 C15.3 237.7 13.0 233.1 11.1 228.6 C10.5 227.1 9.7 225.3 9.4 224.5 C8.3 222.0 7.1 217.7 6.0 212.9 C4.4 205.2 4.2 203.2 4.2 196.1 C4.1 188.3 4.7 183.9 6.5 176.6 C6.8 175.5 7.3 174.0 7.5 173.3 C7.8 172.6 8.0 171.8 8.0 171.6 C8.0 171.4 8.2 170.8 8.4 170.4 C8.5 170.0 9.5 167.8 10.5 165.6 C12.2 161.7 13.9 158.2 15.0 156.5 C15.3 156.0 15.6 155.3 15.8 155.0 C16.8 153.0 22.9 144.8 25.9 141.4 C31.4 135.1 37.4 129.6 45.6 123.3 C47.8 121.6 58.9 114.2 61.4 112.7 C61.8 112.5 63.5 111.5 65.1 110.5 C66.8 109.5 70.9 107.1 74.2 105.1 C77.6 103.2 82.0 100.7 83.9 99.5 C85.8 98.4 88.0 97.1 88.8 96.7 C89.9 96.1 94.8 93.2 98.6 90.9 C99.0 90.6 100.5 89.8 101.8 89.0 C109.3 84.7 123.1 75.8 126.5 73.0 C127.1 72.5 128.0 71.9 128.5 71.5 C131.5 69.4 136.0 65.5 140.3 61.3 C146.4 55.1 149.0 51.9 153.4 45.0 C155.7 41.3 158.0 36.6 159.1 33.1 C160.2 29.4 160.4 28.8 161.3 23.9 C162.0 19.7 162.0 19.5 161.9 13.5 C161.8 8.8 161.7 7.1 161.4 6.3 C160.7 4.3 161.5 3.8 162.7 5.4 C163.0 6.0 164.2 7.3 165.1 8.5 C172.6 17.7 179.2 27.8 182.3 34.8 C182.8 36.1 183.5 37.5 183.6 37.9 C183.8 38.3 184.0 38.8 184.0 38.9 C184.0 39.0 184.2 39.4 184.4 39.8 C185.6 42.4 187.4 49.0 188.4 54.6 C189.1 58.2 189.1 68.7 188.4 72.4 C186.1 85.2 180.7 95.7 170.5 107.2 C168.6 109.4 166.5 111.6 165.8 112.3 C160.8 117.0 152.6 123.6 146.5 127.5 C141.5 130.8 141.6 130.8 137.7 133.0 C136.2 133.9 134.7 134.8 134.3 135.1 C133.9 135.3 133.1 135.7 132.5 136.1 C130.0 137.4 126.0 139.5 124.4 140.3 C123.5 140.8 122.0 141.7 121.1 142.2 C119.3 143.1 113.0 146.3 101.9 152.0 C93.6 156.2 89.7 158.2 89.4 158.5 C89.2 158.6 87.0 159.8 84.4 161.1 C76.8 164.9 68.3 169.6 63.8 172.6 C55.0 178.3 53.7 179.2 49.1 182.9 C39.0 191.0 30.8 200.9 25.8 211.1 C24.2 214.4 23.8 215.2 22.7 218.8 C20.2 226.9 19.8 229.7 19.7 238.0 C19.7 240.7 19.8 243.3 19.8 243.7 C19.9 244.9 19.4 245.0 18.6 243.8 Z" fill="#FFFFFF"/></svg></span>
+      <span class="word"><b>Kero</b><span>Gestão</span></span>
+    </a>
+    <nav class="links" aria-label="Seções">
+      <a href="#mapa">Mapa ao vivo</a>
+      <a href="#recursos">Recursos</a>
+      <a href="#entregador">App do entregador</a>
+      <a href="#implantacao">Implantação</a>
+      <a href="#planos">Planos</a>
+      <a href="#duvidas">Dúvidas</a>
+    </nav>
+    <a class="btn btn-wa" data-wa="Olá! Vi o site e quero conhecer o KeroGestão." href="#"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.79-1.47-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.69.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35M12.05 21.5h-.01a9.4 9.4 0 0 1-4.8-1.31l-.34-.2-3.57.93.95-3.48-.22-.36A9.4 9.4 0 0 1 2.6 12.06C2.6 6.85 6.84 2.6 12.06 2.6a9.4 9.4 0 0 1 9.45 9.46c0 5.21-4.25 9.45-9.46 9.45m8.05-17.5A11.32 11.32 0 0 0 12.05.66C5.77.66.67 5.77.67 12.05c0 2 .52 3.96 1.52 5.69L.57 23.68l6.07-1.6a11.34 11.34 0 0 0 5.41 1.38h.01c6.27 0 11.38-5.11 11.38-11.39 0-3.04-1.19-5.9-3.34-8.06"/></svg><span>Falar no WhatsApp</span></a>
+  </div>
+</header>
+
+<main id="topo">
+  <!-- HERO -->
+  <section class="hero" style="padding-bottom:110px">
+    <div class="wrap">
+      <span class="kick"><i></i>Sistema para revenda de gás e água</span>
+      <h1 class="disp">Do toque do telefone à entrega, <em>tudo num painel só.</em></h1>
+      <p class="lead">O KeroGestão identifica quem está ligando, lança o pedido em segundos, manda direto para o celular do entregador, mostra no mapa onde ele está e quanto falta para chegar, e fecha o caixa no fim do dia. Feito para o dia a dia do depósito.</p>
+      <div class="ctas">
+        <a class="btn btn-wa" data-wa="Olá! Quero agendar uma demonstração do KeroGestão." href="#"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.79-1.47-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.69.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35M12.05 21.5h-.01a9.4 9.4 0 0 1-4.8-1.31l-.34-.2-3.57.93.95-3.48-.22-.36A9.4 9.4 0 0 1 2.6 12.06C2.6 6.85 6.84 2.6 12.06 2.6a9.4 9.4 0 0 1 9.45 9.46c0 5.21-4.25 9.45-9.46 9.45m8.05-17.5A11.32 11.32 0 0 0 12.05.66C5.77.66.67 5.77.67 12.05c0 2 .52 3.96 1.52 5.69L.57 23.68l6.07-1.6a11.34 11.34 0 0 0 5.41 1.38h.01c6.27 0 11.38-5.11 11.38-11.39 0-3.04-1.19-5.9-3.34-8.06"/></svg>Agendar demonstração</a>
+        <a class="btn btn-ghost" href="#recursos">Ver como funciona</a>
+      </div>
+      <div class="proof">
+        <span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Bina que mostra o cliente na tela</span>
+        <span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Entregadores no mapa, ao vivo</span>
+        <span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Previsão de chegada</span>
+        <span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Caixa, estoque e financeiro</span>
+        <span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Funciona no navegador</span>
+      </div>
+      <div class="stage rv">
+        <div class="browser">
+          <div class="bar"><i></i><i></i><i></i><span>Painel KeroGestão · Pedidos</span></div>
+          <img src="img/foco.jpg" alt="Tela de pedidos do KeroGestão com a lista de pedidos do dia e o pedido atual" width="2000" height="1384">
+        </div>
+        <div class="phone"><img src="img/app_home.jpg" alt="App do entregador mostrando as entregas a caminho" width="780" height="1688"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DORES -->
+  <section style="padding-top:40px">
+    <div class="wrap">
+      <div class="sec-h rv">
+        <div class="eyebrow">Por que trocar o caderno</div>
+        <h2 class="disp">O depósito não para. O controle também não pode parar.</h2>
+        <p>Telefone tocando, entregador na rua, cliente pedindo fiado, vasilhame emprestado. Quando tudo isso fica no papel e na memória, o dinheiro escapa.</p>
+      </div>
+      <div class="pains">
+        <div class="pain rv"><div class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 2v6h6M22 2l-6 6"/><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.1L8.1 9.9a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.1-.45c.9.34 1.85.57 2.8.7A2 2 0 0 1 22 16.9Z"/></svg></div><h3>"Quem é que está ligando?"</h3><p>Perguntar nome e endereço toda vez atrasa o pedido e irrita o cliente.</p><div class="fix"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>A bina mostra o cadastro na hora.</div></div>
+        <div class="pain rv"><div class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2M15 18H9M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.62l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg></div><h3>Entregador sem saber o próximo pedido</h3><p>Ligação, recado no papel e pedido esquecido no balcão.</p><div class="fix"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>O pedido chega no app do entregador.</div></div>
+        <div class="pain rv"><div class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/></svg></div><h3>Caixa que nunca fecha</h3><p>No fim do dia, ninguém sabe ao certo quanto entrou em dinheiro e em Pix.</p><div class="fix"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>O fechamento sai pronto, por entregador.</div></div>
+        <div class="pain rv"><div class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 2h6M10 2v2.2M14 2v2.2"/><rect x="5" y="4.5" width="14" height="17.5" rx="6"/><path d="M5 10h14M5 16h14"/></svg></div><h3>Vasilhame que some</h3><p>Casco emprestado sem registro é patrimônio que não volta.</p><div class="fix"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Comodato com saldo e tempo na rua.</div></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- MAPA AO VIVO -->
+  <section id="mapa" class="live" style="padding-top:60px">
+    <div class="wrap">
+      <div class="live-head rv">
+        <div>
+          <div class="eyebrow">Mapa ao vivo e previsão de chegada</div>
+          <h2 class="disp">Saiba onde está cada entregador e quanto falta para chegar.</h2>
+        </div>
+        <div>
+          <p>O app do entregador manda a posição dele para o painel a cada 15 segundos. Você vê todos no mapa, a ordem das entregas de cada um e a previsão de chegada na casa do cliente, calculada pelas ruas.</p>
+          <div class="badges"><span class="badge" style="--c:var(--green)"><i></i>Livre</span><span class="badge" style="--c:var(--orange)"><i></i>Em entrega</span><span class="badge" style="--c:#ffb800"><i></i>Sinal antigo</span><span class="badge" style="--c:#8296A5"><i></i>Sem sinal</span></div>
+        </div>
+      </div>
+
+      <div class="mapstage rv" role="img" aria-label="Ilustração do mapa ao vivo: entregadores, rota do Rafael com duas paradas e previsão de chegada de cerca de 5 minutos">
+        <svg class="base" viewBox="0 0 1600 840" preserveAspectRatio="none" aria-hidden="true">
+  <rect width="1600" height="840" fill="#0c151a"/>
+  <rect x="7" y="7" width="81" height="66" rx="6" fill="#16242c"/><rect x="7" y="87" width="81" height="96" rx="6" fill="#16242c"/><rect x="7" y="197" width="81" height="66" rx="6" fill="#16242c"/><rect x="7" y="277" width="81" height="96" rx="6" fill="#16242c"/><rect x="7" y="387" width="81" height="76" rx="6" fill="#16242c"/><rect x="7" y="477" width="81" height="96" rx="6" fill="#16242c"/><rect x="7" y="587" width="81" height="66" rx="6" fill="#16242c"/><rect x="7" y="667" width="81" height="86" rx="6" fill="#16242c"/><rect x="7" y="767" width="81" height="66" rx="6" fill="#16242c"/><rect x="102" y="7" width="101" height="66" rx="6" fill="#16242c"/><rect x="102" y="87" width="101" height="96" rx="6" fill="#173226"/><rect x="102" y="197" width="101" height="66" rx="6" fill="#16242c"/><rect x="102" y="277" width="101" height="96" rx="6" fill="#173226"/><rect x="102" y="387" width="101" height="76" rx="6" fill="#16242c"/><rect x="102" y="477" width="101" height="96" rx="6" fill="#16242c"/><rect x="102" y="587" width="101" height="66" rx="6" fill="#173226"/><rect x="102" y="667" width="101" height="86" rx="6" fill="#16242c"/><rect x="102" y="767" width="101" height="66" rx="6" fill="#16242c"/><rect x="217" y="7" width="76" height="66" rx="6" fill="#16242c"/><rect x="217" y="87" width="76" height="96" rx="6" fill="#16242c"/><rect x="217" y="197" width="76" height="66" rx="6" fill="#16242c"/><rect x="217" y="277" width="76" height="96" rx="6" fill="#173226"/><rect x="217" y="387" width="76" height="76" rx="6" fill="#16242c"/><rect x="217" y="477" width="76" height="96" rx="6" fill="#173226"/><rect x="217" y="587" width="76" height="66" rx="6" fill="#16242c"/><rect x="217" y="667" width="76" height="86" rx="6" fill="#16242c"/><rect x="217" y="767" width="76" height="66" rx="6" fill="#173226"/><rect x="307" y="7" width="106" height="66" rx="6" fill="#16242c"/><rect x="307" y="87" width="106" height="96" rx="6" fill="#16242c"/><rect x="307" y="197" width="106" height="66" rx="6" fill="#16242c"/><rect x="307" y="277" width="106" height="96" rx="6" fill="#16242c"/><rect x="307" y="387" width="106" height="76" rx="6" fill="#16242c"/><rect x="307" y="477" width="106" height="96" rx="6" fill="#16242c"/><rect x="307" y="587" width="106" height="66" rx="6" fill="#16242c"/><rect x="307" y="667" width="106" height="86" rx="6" fill="#16242c"/><rect x="307" y="767" width="106" height="66" rx="6" fill="#16242c"/><rect x="427" y="7" width="126" height="66" rx="6" fill="#16242c"/><rect x="427" y="87" width="126" height="96" rx="6" fill="#16242c"/><rect x="427" y="197" width="126" height="66" rx="6" fill="#16242c"/><rect x="427" y="277" width="126" height="96" rx="6" fill="#16242c"/><rect x="427" y="387" width="126" height="76" rx="6" fill="#16242c"/><rect x="427" y="477" width="126" height="96" rx="6" fill="#16242c"/><rect x="427" y="587" width="126" height="66" rx="6" fill="#16242c"/><rect x="427" y="667" width="126" height="86" rx="6" fill="#173226"/><rect x="427" y="767" width="126" height="66" rx="6" fill="#16242c"/><rect x="567" y="7" width="66" height="66" rx="6" fill="#16242c"/><rect x="567" y="87" width="66" height="96" rx="6" fill="#16242c"/><rect x="567" y="197" width="66" height="66" rx="6" fill="#16242c"/><rect x="567" y="277" width="66" height="96" rx="6" fill="#16242c"/><rect x="567" y="387" width="66" height="76" rx="6" fill="#16242c"/><rect x="567" y="477" width="66" height="96" rx="6" fill="#173226"/><rect x="567" y="587" width="66" height="66" rx="6" fill="#16242c"/><rect x="567" y="667" width="66" height="86" rx="6" fill="#16242c"/><rect x="567" y="767" width="66" height="66" rx="6" fill="#16242c"/><rect x="647" y="7" width="106" height="66" rx="6" fill="#16242c"/><rect x="647" y="87" width="106" height="96" rx="6" fill="#16242c"/><rect x="647" y="197" width="106" height="66" rx="6" fill="#173226"/><rect x="647" y="277" width="106" height="96" rx="6" fill="#16242c"/><rect x="647" y="387" width="106" height="76" rx="6" fill="#16242c"/><rect x="647" y="477" width="106" height="96" rx="6" fill="#16242c"/><rect x="647" y="587" width="106" height="66" rx="6" fill="#173226"/><rect x="647" y="667" width="106" height="86" rx="6" fill="#16242c"/><rect x="647" y="767" width="106" height="66" rx="6" fill="#16242c"/><rect x="767" y="7" width="106" height="66" rx="6" fill="#16242c"/><rect x="767" y="87" width="106" height="96" rx="6" fill="#173226"/><rect x="767" y="197" width="106" height="66" rx="6" fill="#16242c"/><rect x="767" y="277" width="106" height="96" rx="6" fill="#173226"/><rect x="767" y="387" width="106" height="76" rx="6" fill="#173226"/><rect x="767" y="477" width="106" height="96" rx="6" fill="#16242c"/><rect x="767" y="587" width="106" height="66" rx="6" fill="#16242c"/><rect x="767" y="667" width="106" height="86" rx="6" fill="#16242c"/><rect x="767" y="767" width="106" height="66" rx="6" fill="#16242c"/><rect x="887" y="7" width="106" height="66" rx="6" fill="#16242c"/><rect x="887" y="87" width="106" height="96" rx="6" fill="#16242c"/><rect x="887" y="197" width="106" height="66" rx="6" fill="#16242c"/><rect x="887" y="277" width="106" height="96" rx="6" fill="#16242c"/><rect x="887" y="387" width="106" height="76" rx="6" fill="#173226"/><rect x="887" y="477" width="106" height="96" rx="6" fill="#16242c"/><rect x="887" y="587" width="106" height="66" rx="6" fill="#16242c"/><rect x="887" y="667" width="106" height="86" rx="6" fill="#16242c"/><rect x="887" y="767" width="106" height="66" rx="6" fill="#16242c"/><rect x="1007" y="7" width="76" height="66" rx="6" fill="#16242c"/><rect x="1007" y="87" width="76" height="96" rx="6" fill="#16242c"/><rect x="1007" y="197" width="76" height="66" rx="6" fill="#16242c"/><rect x="1007" y="277" width="76" height="96" rx="6" fill="#16242c"/><rect x="1007" y="387" width="76" height="76" rx="6" fill="#16242c"/><rect x="1007" y="477" width="76" height="96" rx="6" fill="#16242c"/><rect x="1007" y="587" width="76" height="66" rx="6" fill="#16242c"/><rect x="1007" y="667" width="76" height="86" rx="6" fill="#173226"/><rect x="1007" y="767" width="76" height="66" rx="6" fill="#16242c"/><rect x="1097" y="7" width="106" height="66" rx="6" fill="#16242c"/><rect x="1097" y="87" width="106" height="96" rx="6" fill="#16242c"/><rect x="1097" y="197" width="106" height="66" rx="6" fill="#16242c"/><rect x="1097" y="277" width="106" height="96" rx="6" fill="#16242c"/><rect x="1097" y="387" width="106" height="76" rx="6" fill="#16242c"/><rect x="1097" y="477" width="106" height="96" rx="6" fill="#173226"/><rect x="1097" y="587" width="106" height="66" rx="6" fill="#173226"/><rect x="1097" y="667" width="106" height="86" rx="6" fill="#16242c"/><rect x="1097" y="767" width="106" height="66" rx="6" fill="#16242c"/><rect x="1217" y="7" width="106" height="66" rx="6" fill="#16242c"/><rect x="1217" y="87" width="106" height="96" rx="6" fill="#16242c"/><rect x="1217" y="197" width="106" height="66" rx="6" fill="#16242c"/><rect x="1217" y="277" width="106" height="96" rx="6" fill="#16242c"/><rect x="1217" y="387" width="106" height="76" rx="6" fill="#16242c"/><rect x="1217" y="477" width="106" height="96" rx="6" fill="#16242c"/><rect x="1217" y="587" width="106" height="66" rx="6" fill="#16242c"/><rect x="1217" y="667" width="106" height="86" rx="6" fill="#16242c"/><rect x="1217" y="767" width="106" height="66" rx="6" fill="#16242c"/><rect x="1337" y="7" width="106" height="66" rx="6" fill="#16242c"/><rect x="1337" y="87" width="106" height="96" rx="6" fill="#16242c"/><rect x="1337" y="197" width="106" height="66" rx="6" fill="#16242c"/><rect x="1337" y="277" width="106" height="96" rx="6" fill="#16242c"/><rect x="1337" y="387" width="106" height="76" rx="6" fill="#16242c"/><rect x="1337" y="477" width="106" height="96" rx="6" fill="#16242c"/><rect x="1337" y="587" width="106" height="66" rx="6" fill="#16242c"/><rect x="1337" y="667" width="106" height="86" rx="6" fill="#16242c"/><rect x="1337" y="767" width="106" height="66" rx="6" fill="#16242c"/><rect x="1457" y="7" width="136" height="66" rx="6" fill="#16242c"/><rect x="1457" y="87" width="136" height="96" rx="6" fill="#16242c"/><rect x="1457" y="197" width="136" height="66" rx="6" fill="#173226"/><rect x="1457" y="277" width="136" height="96" rx="6" fill="#173226"/><rect x="1457" y="387" width="136" height="76" rx="6" fill="#16242c"/><rect x="1457" y="477" width="136" height="96" rx="6" fill="#16242c"/><rect x="1457" y="587" width="136" height="66" rx="6" fill="#16242c"/><rect x="1457" y="667" width="136" height="86" rx="6" fill="#16242c"/><rect x="1457" y="767" width="136" height="66" rx="6" fill="#16242c"/>
+  <path d="M-20 700 C 300 640, 520 760, 820 690 S 1300 560, 1640 620" stroke="#0c151a" stroke-width="30" fill="none"/>
+  <path d="M-20 700 C 300 640, 520 760, 820 690 S 1300 560, 1640 620" stroke="#1f3b4f" stroke-width="18" fill="none" opacity=".9"/>
+  <path d="M120 -10 L 1500 850" stroke="#0c151a" stroke-width="22"/>
+  <path d="M120 -10 L 1500 850" stroke="#23323c" stroke-width="12"/>
+  <path d="M-10 420 L 1610 420" stroke="#23323c" stroke-width="12" opacity=".0"/>
+  <!-- rota do entregador: tracejado laranja, como no painel -->
+  <path d="M 1046 342 L 1166 196" stroke="#ff6b35" stroke-width="3.2" stroke-dasharray="9 9" stroke-linecap="round" fill="none"/>
+  <path d="M 1166 196 L 640 300" stroke="#ff6b35" stroke-width="3.2" stroke-dasharray="9 9" stroke-linecap="round" fill="none" opacity=".75"/>
+</svg>
+        <div class="mk" style="left:39.5%;top:47%"><span class="depot"><svg viewBox="0 0 231 325" aria-hidden="true"><path d="M79.4 315.8 C76.7 313.1 72.7 308.9 70.7 306.4 C65.8 300.6 62.9 296.7 60.0 291.6 C59.8 291.2 59.3 290.4 58.9 289.8 C58.2 288.6 56.1 284.2 55.4 282.8 C54.2 279.9 52.3 273.2 51.9 270.8 C51.8 270.1 51.6 269.3 51.5 268.9 C51.1 267.7 50.5 261.2 50.5 258.8 C50.5 256.3 51.1 249.9 51.5 248.5 C51.6 248.0 51.9 246.7 52.1 245.7 C52.6 243.3 53.2 241.1 53.6 240.0 C53.8 239.5 54.5 237.8 55.1 236.2 C58.0 228.8 63.2 220.8 69.7 213.8 C77.7 205.0 88.7 196.8 101.4 190.0 C102.5 189.4 104.1 188.5 105.0 188.0 C107.3 186.7 117.4 181.8 133.4 174.1 C134.6 173.5 137.8 172.0 140.5 170.7 C143.2 169.4 146.2 168.0 147.1 167.5 C149.9 166.3 161.9 160.2 165.4 158.2 C166.0 157.9 167.2 157.2 168.1 156.6 C169.1 156.1 170.1 155.5 170.5 155.2 C172.5 154.1 179.4 149.3 180.9 148.1 C186.1 143.8 188.9 141.3 190.8 139.1 C195.2 134.0 195.8 133.3 197.8 130.2 C200.8 125.8 202.0 123.7 203.6 119.8 C204.0 118.9 204.4 117.8 204.6 117.4 C205.0 116.5 205.8 114.0 206.4 112.0 C206.8 110.5 207.4 106.6 207.6 104.1 C207.9 100.9 208.3 100.7 209.5 103.1 C210.0 103.9 210.6 105.2 211.0 105.9 C211.4 106.6 212.5 108.6 213.4 110.5 C217.4 118.2 218.3 119.9 218.5 120.1 C218.8 120.5 221.0 125.6 221.0 125.8 C221.0 125.9 221.2 126.4 221.4 126.8 C222.5 129.3 225.1 137.8 225.8 141.4 C225.9 142.1 226.2 143.4 226.4 144.5 C227.0 147.4 227.3 153.5 227.1 157.6 C226.9 163.2 226.2 166.8 223.9 173.6 C222.1 179.1 220.7 182.0 216.8 187.8 C211.5 195.8 203.3 203.6 193.6 209.9 C189.2 212.7 184.0 215.6 178.4 218.3 C169.9 222.5 164.8 225.0 164.5 225.0 C164.4 225.0 163.6 225.3 162.8 225.7 C160.4 226.9 151.6 231.1 148.2 232.6 C147.4 233.0 146.1 233.5 145.3 233.9 C141.5 235.6 126.8 243.1 124.1 244.6 C121.4 246.2 117.3 248.7 114.6 250.5 C111.9 252.3 104.5 258.5 101.8 261.2 C94.2 268.9 88.8 277.2 86.2 285.2 C83.7 292.6 83.2 295.5 83.1 301.6 C82.9 306.6 83.5 312.1 84.5 316.8 C85.3 320.5 85.4 320.8 84.9 320.8 C84.6 320.8 82.2 318.5 79.4 315.8 Z M18.6 243.8 C18.3 243.3 18.0 242.8 18.0 242.7 C18.0 242.6 17.4 241.4 16.7 240.2 C15.3 237.7 13.0 233.1 11.1 228.6 C10.5 227.1 9.7 225.3 9.4 224.5 C8.3 222.0 7.1 217.7 6.0 212.9 C4.4 205.2 4.2 203.2 4.2 196.1 C4.1 188.3 4.7 183.9 6.5 176.6 C6.8 175.5 7.3 174.0 7.5 173.3 C7.8 172.6 8.0 171.8 8.0 171.6 C8.0 171.4 8.2 170.8 8.4 170.4 C8.5 170.0 9.5 167.8 10.5 165.6 C12.2 161.7 13.9 158.2 15.0 156.5 C15.3 156.0 15.6 155.3 15.8 155.0 C16.8 153.0 22.9 144.8 25.9 141.4 C31.4 135.1 37.4 129.6 45.6 123.3 C47.8 121.6 58.9 114.2 61.4 112.7 C61.8 112.5 63.5 111.5 65.1 110.5 C66.8 109.5 70.9 107.1 74.2 105.1 C77.6 103.2 82.0 100.7 83.9 99.5 C85.8 98.4 88.0 97.1 88.8 96.7 C89.9 96.1 94.8 93.2 98.6 90.9 C99.0 90.6 100.5 89.8 101.8 89.0 C109.3 84.7 123.1 75.8 126.5 73.0 C127.1 72.5 128.0 71.9 128.5 71.5 C131.5 69.4 136.0 65.5 140.3 61.3 C146.4 55.1 149.0 51.9 153.4 45.0 C155.7 41.3 158.0 36.6 159.1 33.1 C160.2 29.4 160.4 28.8 161.3 23.9 C162.0 19.7 162.0 19.5 161.9 13.5 C161.8 8.8 161.7 7.1 161.4 6.3 C160.7 4.3 161.5 3.8 162.7 5.4 C163.0 6.0 164.2 7.3 165.1 8.5 C172.6 17.7 179.2 27.8 182.3 34.8 C182.8 36.1 183.5 37.5 183.6 37.9 C183.8 38.3 184.0 38.8 184.0 38.9 C184.0 39.0 184.2 39.4 184.4 39.8 C185.6 42.4 187.4 49.0 188.4 54.6 C189.1 58.2 189.1 68.7 188.4 72.4 C186.1 85.2 180.7 95.7 170.5 107.2 C168.6 109.4 166.5 111.6 165.8 112.3 C160.8 117.0 152.6 123.6 146.5 127.5 C141.5 130.8 141.6 130.8 137.7 133.0 C136.2 133.9 134.7 134.8 134.3 135.1 C133.9 135.3 133.1 135.7 132.5 136.1 C130.0 137.4 126.0 139.5 124.4 140.3 C123.5 140.8 122.0 141.7 121.1 142.2 C119.3 143.1 113.0 146.3 101.9 152.0 C93.6 156.2 89.7 158.2 89.4 158.5 C89.2 158.6 87.0 159.8 84.4 161.1 C76.8 164.9 68.3 169.6 63.8 172.6 C55.0 178.3 53.7 179.2 49.1 182.9 C39.0 191.0 30.8 200.9 25.8 211.1 C24.2 214.4 23.8 215.2 22.7 218.8 C20.2 226.9 19.8 229.7 19.7 238.0 C19.7 240.7 19.8 243.3 19.8 243.7 C19.9 244.9 19.4 245.0 18.6 243.8 Z" fill="#FFFFFF"/></svg></span></div>
+        <div class="mk" style="left:65.4%;top:40.7%"><span class="cour moving" style="--rc:var(--orange)">RS</span><span class="cname">Rafael · em entrega</span></div>
+        <div class="mk" style="left:33%;top:72%"><span class="cour" style="--rc:var(--green)">ML</span><span class="cname">Marcos · livre</span></div>
+        <div class="mk" style="left:52%;top:84%"><span class="cour" style="--rc:var(--green)">DA</span><span class="cname">Diego · livre</span></div>
+        <div class="mk pin" style="left:72.9%;top:23.3%;--pc:#ff6b35"><b><span>1</span></b></div>
+        <div class="mk pin" style="left:40%;top:35.7%;--pc:#ff6b35"><b><span>2</span></b></div>
+        <div class="mk pin" style="left:49%;top:20%;--pc:#4aa3df"><b><span>•</span></b></div>
+        <div class="mk pin" style="left:62%;top:66%;--pc:#4aa3df"><b><span>•</span></b></div>
+        <div class="mk km" style="left:69.2%;top:32%">1,8 km</div>
+        <div class="mk km" style="left:56.5%;top:29.6%">4,3 km</div>
+        <div class="mk etab" style="left:72.9%;top:23.3%"><small>Chega na casa do cliente em</small><strong>~5 min<em>1,8 km</em></strong></div>
+        <img class="float list" src="img/entregadores_ao_vivo.jpg" alt="Lista de entregadores ao vivo no painel, com a rota do Rafael: 1 Roberto Almeida, 2 Sebastião Rodrigues" loading="lazy" width="700" height="706">
+        <img class="float card" src="img/pedido_atual_eta.jpg" alt="Pedido atual no painel com a previsão de chegada de cerca de 5 minutos" loading="lazy" width="680" height="1195">
+        <div class="legend"><span style="--c:var(--green)"><i></i>Livre</span><span style="--c:var(--orange)"><i></i>Em entrega</span><span style="--c:#4aa3df"><i></i>Pedido aguardando</span><span style="--c:#ff6b35"><i></i>Pedido em rota</span></div>
+      </div>
+      <div class="mobshots"><img src="img/entregadores_ao_vivo.jpg" alt="Lista de entregadores ao vivo" loading="lazy" width="700" height="706"><img src="img/pedido_atual_eta.jpg" alt="Previsão de chegada no pedido atual" loading="lazy" width="680" height="1195"></div>
+      <p class="mapnote">Mapa ilustrativo. A lista de entregadores e o card de previsão são telas reais do painel.</p>
+
+      <div class="livegrid">
+        <div class="cell rv"><div class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><h3>"Quanto tempo falta?"</h3><p>O cliente liga perguntando e você responde na hora: a previsão aparece no pedido, pelas ruas, já contando trânsito e o tempo de estacionar.</p></div>
+        <div class="cell rv"><div class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8.5 19H16a3.5 3.5 0 0 0 0-7H8a3.5 3.5 0 0 1 0-7h7.5"/></svg></div><h3>Ordem das entregas</h3><p>Cada entregador mostra a rota com as paradas numeradas e a distância de cada trecho. Quem tem mais pedidos na rota, aparece.</p></div>
+        <div class="cell rv"><div class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></div><h3>O mais perto leva</h3><p>Na hora de despachar, o sistema mostra a distância e a carga de cada entregador e sugere o melhor para aquele endereço.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RECURSOS -->
+  <section id="recursos" style="padding-top:40px">
+    <div class="wrap">
+      <div class="sec-h rv">
+        <div class="eyebrow">Recursos</div>
+        <h2 class="disp">Tudo o que o depósito precisa, conversando entre si.</h2>
+        <p>Pedido, entrega, caixa, estoque e financeiro ficam ligados: o que acontece em uma tela já aparece nas outras.</p>
+      </div>
+
+      <div class="feat rv">
+        <div class="ft">
+          <div class="tag"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 2v6h6M22 2l-6 6"/><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.1L8.1 9.9a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.1-.45c.9.34 1.85.57 2.8.7A2 2 0 0 1 22 16.9Z"/></svg>Bina integrada</div>
+          <h3>O telefone toca e o cliente já aparece na tela.</h3>
+          <p>O app da Bina, instalado no celular do depósito, avisa o painel a cada ligação. Se o número já é cliente, você vê nome, endereço e o último pedido. Se não é, cadastra em um clique.</p>
+          <ul><li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Histórico de todas as chamadas do dia</li><li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>"Novo pedido" direto da chamada</li><li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Avisa número desconhecido</li></ul>
+        </div>
+        <div class="shot"><img src="img/chamadas.jpg" alt="Tela de chamadas com clientes identificados pela bina" loading="lazy" width="2000" height="1447"></div>
+      </div>
+
+      <div class="feat rev rv">
+        <div class="ft">
+          <div class="tag"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg>Pedido rápido</div>
+          <h3>Pedido lançado em quatro passos.</h3>
+          <p>Cliente, produto, pagamento e entregador. A tela guia o atendente e evita esquecer qualquer detalhe, até troco e pagamento dividido. Dá até para falar o pedido no microfone.</p>
+          <ul><li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Busca por nome, telefone ou endereço</li><li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Pedidos agendados e em espera</li><li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Preço mínimo e máximo com senha de gerente</li></ul>
+        </div>
+        <div class="shot"><img src="img/foco.jpg" alt="Painel de pedidos em quatro passos" loading="lazy" width="2000" height="1384"></div>
+      </div>
+
+      <div class="feat rv">
+        <div class="ft">
+          <div class="tag"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>Visão geral em tempo real</div>
+          <h3>Cada pedido no seu lugar: aguardando, em rota ou entregue.</h3>
+          <p>Veja de relance o que está parado, quem está na rua e há quanto tempo. Os horários de saída e entrega ficam registrados sozinhos.</p>
+          <ul><li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Filtro por entregador e por dia</li><li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Alerta de pedido atrasado ou agendado</li><li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Mapa dos entregadores ao vivo</li></ul>
+        </div>
+        <div class="shot"><img src="img/geral.jpg" alt="Visão geral com pedidos aguardando, em rota e entregues" loading="lazy" width="2000" height="1466"></div>
+      </div>
+
+      <div class="feat rev rv">
+        <div class="ft">
+          <div class="tag"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/></svg>Caixa do dia</div>
+          <h3>Fechamento pronto, por entregador e por forma de pagamento.</h3>
+          <p>Dinheiro, Pix e cartão separados, produtos vendidos e o valor esperado na mesa de cada entregador. Conferir o caixa leva minutos.</p>
+          <ul><li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Sangrias, vales e despesas descontados</li><li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Conferência com histórico</li><li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Fiado vira conta a receber automaticamente</li></ul>
+        </div>
+        <div class="shot"><img src="img/fechamento.jpg" alt="Caixa do dia com total vendido por forma de pagamento e por entregador" loading="lazy" width="2000" height="1466"></div>
+      </div>
+
+      <div class="feat rv">
+        <div class="ft">
+          <div class="tag"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 2h6M10 2v2.2M14 2v2.2"/><rect x="5" y="4.5" width="14" height="17.5" rx="6"/><path d="M5 10h14M5 16h14"/></svg>Vasilhames e comodato</div>
+          <h3>Saiba onde está cada casco.</h3>
+          <p>Registre os vasilhames emprestados para comércios e clientes, acompanhe o saldo, há quantos dias estão na rua e as devoluções.</p>
+          <ul><li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Cheios, vazios e comodato no estoque</li><li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Alerta de empréstimo antigo</li><li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Devolução parcial registrada</li></ul>
+        </div>
+        <div class="shot"><img src="img/comodato.jpg" alt="Gestão de comodatos com vasilhames emprestados por cliente" loading="lazy" width="2000" height="1387"></div>
+      </div>
+
+      <div class="feat rev rv">
+        <div class="ft">
+          <div class="tag"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8 12 3 3 8v8l9 5 9-5V8Z"/><path d="m3 8 9 5 9-5M12 13v8"/></svg>Compras e estoque</div>
+          <h3>Estoque que se atualiza a cada venda e a cada compra.</h3>
+          <p>Cheios prontos para venda, vazios aguardando troca, cobertura em dias e custo médio. Compra de mercadoria já gera a conta a pagar e atualiza o custo.</p>
+          <ul><li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Recarga, compra de casco e devolução</li><li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Valor do estoque pelo custo real</li><li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Tipos de operação do seu jeito</li></ul>
+        </div>
+        <div class="shot"><img src="img/compras.jpg" alt="Estoque por produto com cheios, vazios e comodato" loading="lazy" width="2000" height="1466"></div>
+      </div>
+
+      <div class="feat rv">
+        <div class="ft">
+          <div class="tag"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></svg>Relatórios</div>
+          <h3>Quanto você fatura, quanto lucra e quem são seus melhores clientes.</h3>
+          <p>Faturamento, lucro bruto e líquido, produtos que mais lucram, clientes, entregadores e despesas, comparando com o período anterior.</p>
+          <ul><li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Hoje, semana, mês ou período livre</li><li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Margem por produto</li><li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Bairros que mais compram</li></ul>
+        </div>
+        <div class="shot"><img src="img/relatorios.jpg" alt="Relatórios com faturamento, lucro e maiores clientes" loading="lazy" width="2000" height="1322"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- APP DO ENTREGADOR -->
+  <section id="entregador" style="background:linear-gradient(180deg,transparent,rgba(0,99,142,.10),transparent)">
+    <div class="wrap feat rev" style="padding-top:0;padding-bottom:0">
+      <div class="ft rv">
+        <div class="eyebrow">App do entregador</div>
+        <h2 class="disp">O pedido sai do painel e chega no celular do entregador.</h2>
+        <p>Endereço com um toque para o Google Maps ou o Waze, forma de pagamento, botão de "entregue" e o próprio caixa do dia. A localização dele aparece no mapa do painel.</p>
+        <ul><li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Entregas em tempo real</li><li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Rota pelo Google Maps ou Waze</li><li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Caixa do entregador sempre conferido</li><li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Cadastro de cliente na rua, quando precisar</li></ul>
+      </div>
+      <div class="phones rv">
+        <div class="phone"><img src="img/app_home.jpg" alt="App do entregador: lista de entregas" loading="lazy" width="780" height="1688"></div>
+        <div class="phone"><img src="img/app_tab2.jpg" alt="App do entregador: caixa do dia" loading="lazy" width="780" height="1688"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXTRAS -->
+  <section style="padding-top:40px">
+    <div class="wrap">
+      <div class="sec-h rv">
+        <div class="eyebrow">E mais</div>
+        <h2 class="disp">Os detalhes que fazem diferença no fim do mês.</h2>
+      </div>
+      <div class="grid">
+        <div class="cell rv"><div class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8.5 8.5 0 0 1-12.6 7.4L3 21l1.6-5.2A8.5 8.5 0 1 1 21 12Z"/></svg></div><h3>WhatsApp no painel</h3><p>Converse com os clientes e lance o pedido da mesma tela.</p></div>
+        <div class="cell rv"><div class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg></div><h3>Contas a pagar e a receber</h3><p>Fiado, convênios, boletos de fornecedor e despesas organizados.</p></div>
+        <div class="cell rv"><div class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><h3>Equipe e vales</h3><p>Vales, adiantamentos e retiradas de cada funcionário, descontados certinho.</p></div>
+        <div class="cell rv"><div class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div><h3>Usuários e permissões</h3><p>Cada pessoa vê só o que precisa. Descontos fora da faixa pedem senha do gerente.</p></div>
+        <div class="cell rv"><div class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2M15 18H9M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.62l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg></div><h3>Frota</h3><p>Veículos, placas e manutenções vinculados aos entregadores.</p></div>
+        <div class="cell rv"><div class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg></div><h3>Na nuvem</h3><p>Abre no navegador do computador, sem instalar nada. Os dados ficam no servidor, não num PC só.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMPLANTAÇÃO -->
+  <section id="implantacao" style="padding-top:40px">
+    <div class="wrap">
+      <div class="sec-h rv">
+        <div class="eyebrow">Implantação</div>
+        <h2 class="disp">A gente coloca para rodar com você.</h2>
+        <p>Você não precisa entender de sistema. A implantação é acompanhada do começo ao fim.</p>
+      </div>
+      <div class="steps">
+        <div class="step rv"><b class="n">1</b><h3>Conversa e demonstração</h3><p>Entendemos como o seu depósito funciona e mostramos o sistema na prática.</p></div>
+        <div class="step rv"><b class="n">2</b><h3>Configuração</h3><p>Cadastramos produtos, preços, formas de pagamento, equipe e clientes.</p></div>
+        <div class="step rv"><b class="n">3</b><h3>Bina e app do entregador</h3><p>Instalamos a Bina no celular do depósito e o app nos celulares dos entregadores.</p></div>
+        <div class="step rv"><b class="n">4</b><h3>Treinamento e suporte</h3><p>Treinamos a equipe e acompanhamos os primeiros dias de perto.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLANOS -->
+  <section id="planos" style="padding-top:40px">
+    <div class="wrap">
+      <div class="plan rv">
+        <div class="l">
+          <div class="eyebrow">Planos</div>
+          <h3 class="disp">Um plano do tamanho do seu depósito.</h3>
+          <p>O valor depende do número de usuários, entregadores e do que você precisa. Fale com a gente e receba uma proposta sem compromisso.</p>
+          <a class="btn btn-wa" data-wa="Olá! Quero saber os valores do KeroGestão." href="#"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.79-1.47-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.69.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35M12.05 21.5h-.01a9.4 9.4 0 0 1-4.8-1.31l-.34-.2-3.57.93.95-3.48-.22-.36A9.4 9.4 0 0 1 2.6 12.06C2.6 6.85 6.84 2.6 12.06 2.6a9.4 9.4 0 0 1 9.45 9.46c0 5.21-4.25 9.45-9.46 9.45m8.05-17.5A11.32 11.32 0 0 0 12.05.66C5.77.66.67 5.77.67 12.05c0 2 .52 3.96 1.52 5.69L.57 23.68l6.07-1.6a11.34 11.34 0 0 0 5.41 1.38h.01c6.27 0 11.38-5.11 11.38-11.39 0-3.04-1.19-5.9-3.34-8.06"/></svg>Consultar valores</a>
+        </div>
+        <div class="r">
+          <ul>
+            <li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Painel completo no navegador</li>
+            <li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>App da Bina</li>
+            <li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>App do entregador</li>
+            <li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Caixa, estoque e financeiro</li>
+            <li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Implantação acompanhada</li>
+            <li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Treinamento da equipe</li>
+            <li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Suporte pelo WhatsApp</li>
+            <li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Atualizações incluídas</li>
+          </ul>
+          <small>Sem custo para a demonstração.</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DÚVIDAS -->
+  <section id="duvidas" style="padding-top:40px">
+    <div class="wrap">
+      <div class="sec-h rv"><div class="eyebrow">Dúvidas</div><h2 class="disp">Perguntas frequentes</h2></div>
+      <div class="faq rv">
+        <details><summary>Preciso instalar alguma coisa no computador?</summary><p>Não. O painel abre no navegador (Chrome, Edge ou outro), com usuário e senha. Só a Bina e o app do entregador são instalados, nos celulares Android.</p></details>
+        <details><summary>Como funciona a bina?</summary><p>O app da Bina fica num celular Android com o chip do telefone do depósito. Quando alguém liga, o número vai para o painel na hora e, se já for cliente, o cadastro aparece na tela.</p></details>
+        <details><summary>Como funciona a previsão de chegada?</summary><p>Com o app do entregador aberto, a posição dele vai para o painel a cada 15 segundos. O sistema calcula o caminho pelas ruas até o endereço do cliente, soma uma margem para trânsito e para estacionar, e mostra os minutos e a distância no pedido. Se o entregador já tem outros pedidos na rota, isso também aparece.</p></details>
+        <details><summary>Serve para depósito de água também?</summary><p>Sim. Você cadastra seus produtos (gás, água, acessórios) com preço e estoque, e o sistema trata cada um do jeito certo, inclusive os vasilhames.</p></details>
+        <details><summary>Meus dados ficam seguros?</summary><p>Os dados ficam num servidor na nuvem, e não num computador só. Cada pessoa entra com o próprio usuário e vê só o que tem permissão para ver.</p></details>
+        <details><summary>Consigo usar com mais de um atendente e vários entregadores?</summary><p>Sim. Vários atendentes usam o painel ao mesmo tempo e cada entregador tem o próprio acesso ao app. Tudo se atualiza em tempo real.</p></details>
+        <details><summary>O sistema emite nota fiscal?</summary><p>A emissão de nota fiscal está em fase final de implantação. Fale com a gente para saber como fica no seu caso.</p></details>
+        <details><summary>Como é o suporte?</summary><p>Pelo WhatsApp, com quem conhece o sistema e o dia a dia de uma revenda.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHAMADA FINAL -->
+  <section style="padding-top:20px">
+    <div class="wrap">
+      <div class="final rv">
+        <h2 class="disp">Veja o KeroGestão funcionando no seu depósito.</h2>
+        <p>Agende uma demonstração gratuita. Em poucos minutos você entende como ele organiza o seu dia.</p>
+        <div class="ctas"><a class="btn btn-wa" data-wa="Olá! Quero agendar uma demonstração do KeroGestão." href="#"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.79-1.47-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.69.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35M12.05 21.5h-.01a9.4 9.4 0 0 1-4.8-1.31l-.34-.2-3.57.93.95-3.48-.22-.36A9.4 9.4 0 0 1 2.6 12.06C2.6 6.85 6.84 2.6 12.06 2.6a9.4 9.4 0 0 1 9.45 9.46c0 5.21-4.25 9.45-9.46 9.45m8.05-17.5A11.32 11.32 0 0 0 12.05.66C5.77.66.67 5.77.67 12.05c0 2 .52 3.96 1.52 5.69L.57 23.68l6.07-1.6a11.34 11.34 0 0 0 5.41 1.38h.01c6.27 0 11.38-5.11 11.38-11.39 0-3.04-1.19-5.9-3.34-8.06"/></svg>Agendar demonstração</a></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="#topo" aria-label="KeroGestão, voltar ao início"><span class="mark"><svg viewBox="0 0 231 325" aria-hidden="true"><path d="M79.4 315.8 C76.7 313.1 72.7 308.9 70.7 306.4 C65.8 300.6 62.9 296.7 60.0 291.6 C59.8 291.2 59.3 290.4 58.9 289.8 C58.2 288.6 56.1 284.2 55.4 282.8 C54.2 279.9 52.3 273.2 51.9 270.8 C51.8 270.1 51.6 269.3 51.5 268.9 C51.1 267.7 50.5 261.2 50.5 258.8 C50.5 256.3 51.1 249.9 51.5 248.5 C51.6 248.0 51.9 246.7 52.1 245.7 C52.6 243.3 53.2 241.1 53.6 240.0 C53.8 239.5 54.5 237.8 55.1 236.2 C58.0 228.8 63.2 220.8 69.7 213.8 C77.7 205.0 88.7 196.8 101.4 190.0 C102.5 189.4 104.1 188.5 105.0 188.0 C107.3 186.7 117.4 181.8 133.4 174.1 C134.6 173.5 137.8 172.0 140.5 170.7 C143.2 169.4 146.2 168.0 147.1 167.5 C149.9 166.3 161.9 160.2 165.4 158.2 C166.0 157.9 167.2 157.2 168.1 156.6 C169.1 156.1 170.1 155.5 170.5 155.2 C172.5 154.1 179.4 149.3 180.9 148.1 C186.1 143.8 188.9 141.3 190.8 139.1 C195.2 134.0 195.8 133.3 197.8 130.2 C200.8 125.8 202.0 123.7 203.6 119.8 C204.0 118.9 204.4 117.8 204.6 117.4 C205.0 116.5 205.8 114.0 206.4 112.0 C206.8 110.5 207.4 106.6 207.6 104.1 C207.9 100.9 208.3 100.7 209.5 103.1 C210.0 103.9 210.6 105.2 211.0 105.9 C211.4 106.6 212.5 108.6 213.4 110.5 C217.4 118.2 218.3 119.9 218.5 120.1 C218.8 120.5 221.0 125.6 221.0 125.8 C221.0 125.9 221.2 126.4 221.4 126.8 C222.5 129.3 225.1 137.8 225.8 141.4 C225.9 142.1 226.2 143.4 226.4 144.5 C227.0 147.4 227.3 153.5 227.1 157.6 C226.9 163.2 226.2 166.8 223.9 173.6 C222.1 179.1 220.7 182.0 216.8 187.8 C211.5 195.8 203.3 203.6 193.6 209.9 C189.2 212.7 184.0 215.6 178.4 218.3 C169.9 222.5 164.8 225.0 164.5 225.0 C164.4 225.0 163.6 225.3 162.8 225.7 C160.4 226.9 151.6 231.1 148.2 232.6 C147.4 233.0 146.1 233.5 145.3 233.9 C141.5 235.6 126.8 243.1 124.1 244.6 C121.4 246.2 117.3 248.7 114.6 250.5 C111.9 252.3 104.5 258.5 101.8 261.2 C94.2 268.9 88.8 277.2 86.2 285.2 C83.7 292.6 83.2 295.5 83.1 301.6 C82.9 306.6 83.5 312.1 84.5 316.8 C85.3 320.5 85.4 320.8 84.9 320.8 C84.6 320.8 82.2 318.5 79.4 315.8 Z M18.6 243.8 C18.3 243.3 18.0 242.8 18.0 242.7 C18.0 242.6 17.4 241.4 16.7 240.2 C15.3 237.7 13.0 233.1 11.1 228.6 C10.5 227.1 9.7 225.3 9.4 224.5 C8.3 222.0 7.1 217.7 6.0 212.9 C4.4 205.2 4.2 203.2 4.2 196.1 C4.1 188.3 4.7 183.9 6.5 176.6 C6.8 175.5 7.3 174.0 7.5 173.3 C7.8 172.6 8.0 171.8 8.0 171.6 C8.0 171.4 8.2 170.8 8.4 170.4 C8.5 170.0 9.5 167.8 10.5 165.6 C12.2 161.7 13.9 158.2 15.0 156.5 C15.3 156.0 15.6 155.3 15.8 155.0 C16.8 153.0 22.9 144.8 25.9 141.4 C31.4 135.1 37.4 129.6 45.6 123.3 C47.8 121.6 58.9 114.2 61.4 112.7 C61.8 112.5 63.5 111.5 65.1 110.5 C66.8 109.5 70.9 107.1 74.2 105.1 C77.6 103.2 82.0 100.7 83.9 99.5 C85.8 98.4 88.0 97.1 88.8 96.7 C89.9 96.1 94.8 93.2 98.6 90.9 C99.0 90.6 100.5 89.8 101.8 89.0 C109.3 84.7 123.1 75.8 126.5 73.0 C127.1 72.5 128.0 71.9 128.5 71.5 C131.5 69.4 136.0 65.5 140.3 61.3 C146.4 55.1 149.0 51.9 153.4 45.0 C155.7 41.3 158.0 36.6 159.1 33.1 C160.2 29.4 160.4 28.8 161.3 23.9 C162.0 19.7 162.0 19.5 161.9 13.5 C161.8 8.8 161.7 7.1 161.4 6.3 C160.7 4.3 161.5 3.8 162.7 5.4 C163.0 6.0 164.2 7.3 165.1 8.5 C172.6 17.7 179.2 27.8 182.3 34.8 C182.8 36.1 183.5 37.5 183.6 37.9 C183.8 38.3 184.0 38.8 184.0 38.9 C184.0 39.0 184.2 39.4 184.4 39.8 C185.6 42.4 187.4 49.0 188.4 54.6 C189.1 58.2 189.1 68.7 188.4 72.4 C186.1 85.2 180.7 95.7 170.5 107.2 C168.6 109.4 166.5 111.6 165.8 112.3 C160.8 117.0 152.6 123.6 146.5 127.5 C141.5 130.8 141.6 130.8 137.7 133.0 C136.2 133.9 134.7 134.8 134.3 135.1 C133.9 135.3 133.1 135.7 132.5 136.1 C130.0 137.4 126.0 139.5 124.4 140.3 C123.5 140.8 122.0 141.7 121.1 142.2 C119.3 143.1 113.0 146.3 101.9 152.0 C93.6 156.2 89.7 158.2 89.4 158.5 C89.2 158.6 87.0 159.8 84.4 161.1 C76.8 164.9 68.3 169.6 63.8 172.6 C55.0 178.3 53.7 179.2 49.1 182.9 C39.0 191.0 30.8 200.9 25.8 211.1 C24.2 214.4 23.8 215.2 22.7 218.8 C20.2 226.9 19.8 229.7 19.7 238.0 C19.7 240.7 19.8 243.3 19.8 243.7 C19.9 244.9 19.4 245.0 18.6 243.8 Z" fill="#FFFFFF"/></svg></span><span class="word"><b>Kero</b><span>Gestão</span></span></a>
+    <nav aria-label="Rodapé">
+      <a href="#recursos">Recursos</a>
+      <a href="#planos">Planos</a>
+      <a href="#privacidade">Política de privacidade</a>
+      <!-- Instagram e Facebook: entram aqui quando os links forem enviados -->
+    </nav>
+    <span>© <span id="ano">2026</span> KeroGestão</span>
+  </div>
+</footer>
+
+<a class="wa-float" data-wa="Olá! Vi o site e quero conhecer o KeroGestão." href="#" aria-label="Falar no WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true" fill="#fff"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.79-1.47-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.69.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35M12.05 21.5h-.01a9.4 9.4 0 0 1-4.8-1.31l-.34-.2-3.57.93.95-3.48-.22-.36A9.4 9.4 0 0 1 2.6 12.06C2.6 6.85 6.84 2.6 12.06 2.6a9.4 9.4 0 0 1 9.45 9.46c0 5.21-4.25 9.45-9.46 9.45m8.05-17.5A11.32 11.32 0 0 0 12.05.66C5.77.66.67 5.77.67 12.05c0 2 .52 3.96 1.52 5.69L.57 23.68l6.07-1.6a11.34 11.34 0 0 0 5.41 1.38h.01c6.27 0 11.38-5.11 11.38-11.39 0-3.04-1.19-5.9-3.34-8.06"/></svg></a>
+
+<!-- POLÍTICA DE PRIVACIDADE -->
+<div class="priv" id="privacidade" role="dialog" aria-modal="true" aria-labelledby="privT">
+  <div class="box">
+    <a class="x" href="#topo" aria-label="Fechar">×</a>
+    <h2 id="privT" class="disp">Política de privacidade</h2>
+    <p>Esta política explica como o KeroGestão trata os dados pessoais de quem visita este site e entra em contato conosco, conforme a Lei Geral de Proteção de Dados (Lei nº 13.709/2018).</p>
+    <h3>Quem somos</h3>
+    <p>O KeroGestão é mantido por Filipe dos Reis Nunes, responsável pelo tratamento dos dados descritos aqui. Contato: WhatsApp (11) 97880-6324.</p>
+    <h3>Quais dados coletamos</h3>
+    <p>Quando você fala com a gente pelo WhatsApp, redes sociais ou e-mail, recebemos os dados que você mesmo nos envia, como nome, telefone, nome da empresa e cidade. Este site não tem formulário de cadastro e não pede dados de pagamento.</p>
+    <h3>Para que usamos</h3>
+    <p>Para responder ao seu contato, apresentar o sistema, enviar propostas e prestar suporte aos clientes. Não vendemos nem compartilhamos seus dados para fins de publicidade de terceiros.</p>
+    <h3>Cookies e ferramentas de terceiros</h3>
+    <p>O site carrega fontes do Google Fonts. Se no futuro usarmos ferramentas de medição de visitas ou anúncios, esta política será atualizada.</p>
+    <h3>Por quanto tempo guardamos</h3>
+    <p>Pelo tempo necessário para atender ao seu pedido ou enquanto durar a relação comercial, e depois pelo prazo exigido por lei.</p>
+    <h3>Seus direitos</h3>
+    <p>Você pode pedir a qualquer momento acesso, correção ou exclusão dos seus dados, ou saber com quem eles foram compartilhados, pelo WhatsApp (11) 97880-6324.</p>
+    <p style="margin-top:22px;color:var(--faint)">Atualizada em novembro de 2026.</p>
+  </div>
+</div>
+
+<script>
+  /* WhatsApp: troque o número aqui (DDI + DDD + número, só dígitos) */
+  var WHATSAPP = '5511978806324';
+  document.querySelectorAll('[data-wa]').forEach(function(a){
+    a.href = 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(a.getAttribute('data-wa'));
+    a.target = '_blank'; a.rel = 'noopener';
+  });
+  try { document.getElementById('ano').textContent = new Date().getFullYear(); } catch(e) {}
+  /* revela as seções ao rolar */
+  (function(){
+    var els = document.querySelectorAll('.rv');
+    if (!('IntersectionObserver' in window)) { els.forEach(function(e){ e.classList.add('on'); }); return; }
+    var io = new IntersectionObserver(function(es){ es.forEach(function(x){ if (x.isIntersecting) { x.target.classList.add('on'); io.unobserve(x.target); } }); }, { rootMargin: '0px 0px -8% 0px' });
+    els.forEach(function(e){ io.observe(e); });
+  })();
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && location.hash === '#privacidade') location.hash = '#topo'; });
+</script>
+</body>
+</html>
